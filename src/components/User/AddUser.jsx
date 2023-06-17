@@ -34,14 +34,14 @@ const AddUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Perform validation
     if (password !== user.password) {
       setPasswordError("Passwords do not match");
       return;
     }
-    dispatch(createUser(user));
+    await dispatch(createUser(user));
     navigate("/");
   };
 

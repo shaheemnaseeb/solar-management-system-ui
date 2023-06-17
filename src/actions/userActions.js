@@ -30,10 +30,13 @@ export const createUser = (user) => {
   };
 };
 
-export const loginUser = (user) => {
+export const loginUser = (username, password) => {
   return async (dispatch) => {
     dispatch({ type: LOGIN_USER });
-
+    const user = {
+      username,
+      password,
+    };
     try {
       const response = await axios.get(`/api/v1/user/login`, {
         ...user,

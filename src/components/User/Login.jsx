@@ -34,9 +34,9 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser({ username, password }));
+    await dispatch(loginUser(username, password));
     navigate('/');
   };
 
