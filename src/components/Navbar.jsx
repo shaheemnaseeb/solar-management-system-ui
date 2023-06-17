@@ -25,13 +25,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = () => {
   const classes = useStyles();
-  const { isAuthenticated } = useSelector((state) => state);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  const handleLogin = () => {
-  }
-  
-  const handleSignUp = () => {
-  }
   return (
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>
@@ -43,16 +38,16 @@ const Navbar = () => {
             <Button component={Link} to="/" color="inherit" className={classes.button}>
               Home
             </Button>
-            <Button color="inherit" className={classes.button}>
+            <Button component={Link} to="/projects" color="inherit" className={classes.button}>
               Project
             </Button>
           </>
         ) : (
           <>
-            <Button component={Link} to="/login" onClick={handleLogin} color="inherit" className={classes.button}>
+            <Button component={Link} to="/login" color="inherit" className={classes.button}>
               Login
             </Button>
-            <Button component={Link} to="/signup" onClick={handleSignUp} color="inherit" className={classes.button}>
+            <Button component={Link} to="/signup" color="inherit" className={classes.button}>
               SignUp
             </Button>
           </>

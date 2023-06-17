@@ -78,19 +78,20 @@ const Project = () => {
     createdAt: "",
     status: true,
     description: "",
-    userId: 1,
+    userId: user.id,
   });
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        await dispatch(getProjects(1));
+        await dispatch(getProjects(user.id));
       } catch (error) {
         console.log("Error fetching projects:", error);
       }
     };
     
     fetchProjects();
+  // eslint-disable-next-line
   }, [user]);
 
   if (loading) {
