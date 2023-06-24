@@ -39,7 +39,10 @@ const Navbar = () => {
               Home
             </Button>
             <Button component={Link} to="/projects" color="inherit" className={classes.button}>
-              Project
+              Projects
+            </Button>
+            <Button component={Link} to="/products" color="inherit" className={classes.button}>
+              Products
             </Button>
           </>
         ) : (
