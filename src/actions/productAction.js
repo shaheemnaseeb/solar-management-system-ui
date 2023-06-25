@@ -78,17 +78,14 @@ export const getProductsbyProjectId = (projectid) => {
   };
 };
 
-export const updateProduct = (product) => {
+export const updateProduct = (productId, product) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_PROJECT_PRODUCT });
 
     try {
-      const response = await axios.put(
-        `/api/v1/project/product/${product.id}`,
-        {
-          ...product,
-        }
-      );
+      const response = await axios.put(`/api/v1/project/product/${productId}`, {
+        ...product,
+      });
 
       dispatch({
         type: UPDATE_PROJECT_PRODUCT_SUCCESS,

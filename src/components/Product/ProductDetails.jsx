@@ -8,7 +8,11 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
-import { deleteProduct, updateProduct } from "../../actions/productAction";
+import {
+  deleteProduct,
+  getProductsbyProjectId,
+  updateProduct,
+} from "../../actions/productAction";
 import Spinner from "../Shared/Spinner";
 import {
   MapContainer as Map,
@@ -36,7 +40,9 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //   const product = useSelector((state) => state.product.product);
-  const projects = useSelector((state) => state.project.projects);
+  const porject_products = useSelector(
+    (state) => state.product.project_products
+  );
   const [formData, setFormData] = useState({
     area: "",
     latitude: 0,
@@ -44,42 +50,33 @@ const ProductDetails = () => {
     orientation: "",
     tilt: "",
   });
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState({
+    name: "",
+    power: "",
+  });
   const classes = useStyles();
 
-  const findProductById = (projectId, productId) => {
-    const project =  projects.find((project) => project.id === Number(projectId));
-    return project?.product?.find((prod) => prod.id === Number(productId));
+  const findProductById = (productId) => {
+    const product = porject_products?.find(
+      (prod) => prod.id === Number(productId)
+    );
+    return product;
   };
 
   useEffect(() => {
-    setProduct(findProductById(projectId, productId));
-    console.log(product);
-  }, [projects]);
-
-  //   const findProductById = (productId) => {
-  //     return products.find((product) => product.id === Number(productId));
-  //   };
-
-  //   const getProjectProducts = async (productId) => {
-  //     await dispatch(getProductsbyProjectId(productId));
-  //   };
-
-  // //   useEffect(() => {
-  // //     dispatch(getProd(productId));
-  // //   }, [dispatch, productId]);
-
-  //   useEffect(() => {
-  //     if (product) {
-  //       setFormData({
-  //         area: product.area,
-  //         latitude: product.latitude,
-  //         longitude: product.longitude,
-  //         orientation: product.orientation,
-  //         tilt: product.tilt
-  //       });
-  //     }
-  //   }, [product]);
+    const product = findProductById(productId);
+    setProduct({
+      name: product?.product.name,
+      power: product?.product.power,
+    });
+    setFormData({
+      area: product?.area,
+      latitude: product?.latitude,
+      longitude: product?.longitude,
+      orientation: product?.orientation,
+      tilt: product?.tilt,
+    });
+  }, [porject_products]);
 
   const handleInputChange = (event) => {
     console.log(event.target.value);
@@ -99,31 +96,28 @@ const ProductDetails = () => {
       click: handleMapClick,
     });
 
-    return <Marker position={[formData.latitude, formData.longitude]} />;
+    return <Marker position={[formData?.latitude, formData?.longitude]} />;
   }
 
-  //   const handleUpdateProduct = () => {
-  //     dispatch(updateProduct(productId, formData));
-  //     // Redirect to the product details page after updating
-  //     navigate.go(`/products/${productId}`);
-  //   };
+  const getProjectProducts = async (projectId) => {
+    await dispatch(getProductsbyProjectId(projectId));
+  };
 
-  //   const handleDeleteProduct = () => {
-  //     if (window.confirm("Are you sure you want to delete this product?")) {
-  //       dispatch(deleteProduct(productId));
-  //       // Redirect to the product list page after deleting
-  //       navigate.go("/products");
-  //     }
-  //   };
+  const handleUpdateProduct = () => {
+    dispatch(updateProduct(productId, formData));
+    getProjectProducts(projectId);
+    navigate(`/project/${projectId}/product/${productId}`);
+  };
 
-  //   if (!product) {
-  //     return <Spinner />;
-  //   }
+  const handleDeleteProduct = () => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      dispatch(deleteProduct(productId));
+      getProjectProducts(projectId);
+      navigate(`/project/${projectId}`);
+    }
+  };
 
-//   const product = {
-//     name: "Product 1",
-//     description: "This is product 1",
-//   };
+  const handleGenerateReport = () => {};
 
   return (
     <div className={classes.root}>
@@ -146,7 +140,7 @@ const ProductDetails = () => {
             label="Area"
             variant="outlined"
             name="area"
-            value={formData.area}
+            value={formData?.area}
             onChange={handleInputChange}
             fullWidth
           />
@@ -155,7 +149,7 @@ const ProductDetails = () => {
             label="Orientation"
             variant="outlined"
             name="orientation"
-            value={formData.orientation}
+            value={formData?.orientation}
             onChange={handleInputChange}
             fullWidth
           />
@@ -164,7 +158,7 @@ const ProductDetails = () => {
             label="Tilt"
             variant="outlined"
             name="tilt"
-            value={formData.tilt}
+            value={formData?.tilt}
             onChange={handleInputChange}
             fullWidth
           />
@@ -173,8 +167,8 @@ const ProductDetails = () => {
           {/* Render the map here */}
           <div style={{ height: "200px", width: "100%" }}>
             <Map
-              center={[formData.latitude, formData.longitude]}
-              zoom={10}
+              center={[formData?.latitude, formData?.longitude]}
+              zoom={5}
               style={{ height: "50vh" }}
               onclick={handleMapClick}
             >
@@ -189,10 +183,25 @@ const ProductDetails = () => {
       </Grid>
 
       <div className={classes.buttonGroup}>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleUpdateProduct}
+        >
           Update
         </Button>
-        <Button variant="contained" color="secondary">
+        <Button
+          variant="contained"
+          color="sucqcess"
+          onClick={handleGenerateReport}
+        >
+          Generate Report
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleDeleteProduct}
+        >
           Delete
         </Button>
       </div>

@@ -91,7 +91,6 @@ const productReducer = (state = initialState, action) => {
     case UPDATE_PROJECT_PRODUCT_SUCCESS:
       return {
         ...state,
-        user: action.payload,
         loading: false,
         error: null,
       };
@@ -110,7 +109,6 @@ const productReducer = (state = initialState, action) => {
     case DELETE_PROJECT_PRODUCT_SUCCESS:
       return {
         ...state,
-        user: action.payload,
         loading: false,
         error: null,
       };

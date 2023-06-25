@@ -198,7 +198,7 @@ const ProductAdd = () => {
           <div style={{ height: "50vh" }}>
             <Map
               center={[product.latitude, product.longitude]}
-              zoom={10}
+              zoom={5}
               style={{ height: "50vh" }}
               onclick={handleMapClick}
             >
