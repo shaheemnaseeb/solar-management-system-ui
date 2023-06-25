@@ -57,6 +57,7 @@ const Project = () => {
     e.preventDefault();
     project.createdAt = new Date();
     await dispatch(createProject(project));
+    await dispatch(getProjects(user.id));
     handleClose();
     navigate.go(0);
   };

@@ -20,6 +20,8 @@ import {
   Marker,
   useMapEvents,
 } from "react-leaflet";
+import { createReport, getReport } from "../../actions/reportAction";
+import ReportGraph from "../Report/ReportGraph";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,10 +41,12 @@ const ProductDetails = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //   const product = useSelector((state) => state.product.product);
+
   const porject_products = useSelector(
     (state) => state.product.project_products
   );
+  const userid = useSelector((state) => state.user.user.id);
+  const report = useSelector((state) => state.report.report);
   const [formData, setFormData] = useState({
     area: "",
     latitude: 0,
@@ -64,6 +68,7 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
+    getProductReportData(productId);
     const product = findProductById(productId);
     setProduct({
       name: product?.product.name,
@@ -75,20 +80,27 @@ const ProductDetails = () => {
       longitude: product?.longitude,
       orientation: product?.orientation,
       tilt: product?.tilt,
+      active: product?.active,
     });
-  }, [porject_products]);
+  }, [porject_products, userid, productId]);
 
-  const handleInputChange = (event) => {
-    console.log(event.target.value);
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setFormData({
+      ...formData,
+      [e.target.name]: value,
+    });
   };
 
   const handleMapClick = (event) => {
     const { lat, lng } = event.latlng;
-    setFormData({
-      ...formData,
-      latitude: lat,
-      longitude: lng,
-    });
+    if (!formData?.active === false) {
+      setFormData({
+        ...formData,
+        latitude: lat,
+        longitude: lng,
+      });
+    }
   };
 
   function LocationMarker() {
@@ -103,8 +115,12 @@ const ProductDetails = () => {
     await dispatch(getProductsbyProjectId(projectId));
   };
 
-  const handleUpdateProduct = () => {
-    dispatch(updateProduct(productId, formData));
+  const getProductReportData = async (productId) => {
+    await dispatch(getReport(Number(productId)));
+  };
+
+  const handleUpdateProduct = async () => {
+    await dispatch(updateProduct(productId, formData));
     getProjectProducts(projectId);
     navigate(`/project/${projectId}/product/${productId}`);
   };
@@ -117,7 +133,11 @@ const ProductDetails = () => {
     }
   };
 
-  const handleGenerateReport = () => {};
+  const handleGenerateReport = async () => {
+    await dispatch(createReport(userid, Number(productId)));
+    getProjectProducts(projectId);
+    navigate(`/project/${projectId}/product/${productId}`);
+  };
 
   return (
     <div className={classes.root}>
@@ -143,6 +163,7 @@ const ProductDetails = () => {
             value={formData?.area}
             onChange={handleInputChange}
             fullWidth
+            disabled={!formData?.active}
           />
           <TextField
             className={classes.input}
@@ -152,6 +173,7 @@ const ProductDetails = () => {
             value={formData?.orientation}
             onChange={handleInputChange}
             fullWidth
+            disabled={!formData?.active}
           />
           <TextField
             className={classes.input}
@@ -161,6 +183,7 @@ const ProductDetails = () => {
             value={formData?.tilt}
             onChange={handleInputChange}
             fullWidth
+            disabled={!formData?.active}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -169,7 +192,7 @@ const ProductDetails = () => {
             <Map
               center={[formData?.latitude, formData?.longitude]}
               zoom={5}
-              style={{ height: "50vh" }}
+              style={{ height: "32vh" }}
               onclick={handleMapClick}
             >
               <TileLayer
@@ -182,29 +205,39 @@ const ProductDetails = () => {
         </Grid>
       </Grid>
 
-      <div className={classes.buttonGroup}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleUpdateProduct}
-        >
-          Update
-        </Button>
-        <Button
-          variant="contained"
-          color="sucqcess"
-          onClick={handleGenerateReport}
-        >
-          Generate Report
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleDeleteProduct}
-        >
-          Delete
-        </Button>
-      </div>
+      {!formData?.active ? (
+        report?.length === 0 ? (
+          <div> No report generated yet </div>
+        ) : (
+          <div>
+            <ReportGraph report={report} />
+          </div>
+        )
+      ) : (
+        <div className={classes.buttonGroup}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleUpdateProduct}
+          >
+            Update
+          </Button>
+          <Button
+            variant="contained"
+            color="default"
+            onClick={handleGenerateReport}
+          >
+            Generate Report
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleDeleteProduct}
+          >
+            Delete
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
