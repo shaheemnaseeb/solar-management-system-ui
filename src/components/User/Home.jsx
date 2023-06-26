@@ -8,7 +8,8 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteUser, updateUser } from "../../actions/userActions";
+import { deleteUser, getUser, updateUser } from "../../actions/userActions";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +55,14 @@ const Home = () => {
     email: userInfo.email,
     password: userInfo.password,
   });
+
+  const getUserData = async () => {
+    await dispatch(getUser(userInfo.username));
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   const handleEditClick = () => {
     setEditMode(true);

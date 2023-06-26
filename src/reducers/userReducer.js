@@ -12,6 +12,9 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
   LOGOUT_USER,
+  GET_USER,
+  GET_USER_SUCCESS,
+  GET_USER_FAILURE,
 } from "../types/userActionType";
 
 const initialState = {
@@ -108,6 +111,26 @@ const userReducer = (state = initialState, action) => {
         isAuthenticated: false,
         loading: false,
         error: null,
+      };
+    case GET_USER:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+        isAuthenticated: true,
+        loading: false,
+        error: null,
+      };
+    case GET_USER_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
       };
     default:
       return state;

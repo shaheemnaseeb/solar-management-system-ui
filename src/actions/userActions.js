@@ -13,6 +13,9 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
   LOGOUT_USER,
+  GET_USER,
+  GET_USER_SUCCESS,
+  GET_USER_FAILURE,
 } from "../types/userActionType";
 
 export const createUser = (user) => {
@@ -108,3 +111,23 @@ export const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
   };
 };
+
+export const getUser = (username) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_USER });
+
+    try {
+      const response = await axios.get(`/api/v1/user/${username}`);
+
+      dispatch({
+        type: GET_USER_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_USER_FAILURE,
+        payload: error.response.data.error,
+      });
+    }
+  };
+}

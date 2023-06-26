@@ -46,6 +46,15 @@ const ProjectDetail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(true);
+
+  const filteredProducts = products.filter((product) =>
+    product.active === activeFilter ? product : null
+  );
+
+  const handleFilterChange = (event) => {
+    setActiveFilter(event.target.value);
+  };
 
   const findProjectById = (projectId) => {
     return projects.find((project) => project.id === Number(projectId));
@@ -79,7 +88,7 @@ const ProjectDetail = () => {
 
   const handleDeleteProject = async () => {
     await dispatch(deleteProject(projectId));
-    navigate("/projects"); 
+    navigate("/projects");
   };
 
   const handleEditClick = () => {
@@ -211,15 +220,28 @@ const ProjectDetail = () => {
           Delete
         </Button>
       </div>
-      {products ? (
-        <Grid container spacing={2}>
-          {products?.map((product) => (
-            <Products key={product.id} {...product} />
-          ))}
-        </Grid>
-      ) : (
-        <p>No products found</p>
-      )}
+      <div>
+        <h1>Project Products</h1>
+        <FormControl
+          style={{ width: "300px", marginBottom: "30px" }}
+          className={classes.formControl}
+        >
+          <InputLabel>Filter Products</InputLabel>
+          <Select value={activeFilter} onChange={handleFilterChange}>
+            <MenuItem value={true}>Active</MenuItem>
+            <MenuItem value={false}>Inactive</MenuItem>
+          </Select>
+        </FormControl>
+        {filteredProducts.length > 0 ? (
+          <Grid container spacing={2}>
+            {filteredProducts.map((product) => (
+              <Products key={product.id} {...product} />
+            ))}
+          </Grid>
+        ) : (
+          <p>No products found</p>
+        )}
+      </div>
     </div>
   );
 };

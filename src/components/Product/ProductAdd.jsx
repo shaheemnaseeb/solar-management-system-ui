@@ -19,6 +19,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getProjects } from "../../actions/projectAction";
 import { addProduct, getProducts } from "../../actions/productAction";
 
@@ -63,7 +64,10 @@ const ProductAdd = () => {
     projectId: "",
     tilt: "",
     userId: "",
+    active: true,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -89,6 +93,7 @@ const ProductAdd = () => {
     product.userId = user.id;
     e.preventDefault();
     await dispatch(addProduct(product));
+    navigate(`/project/${product.projectId}`);
   };
 
   const handleMapClick = (event) => {
