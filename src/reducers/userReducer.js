@@ -11,6 +11,7 @@ import {
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  LOGOUT_USER,
 } from "../types/userActionType";
 
 const initialState = {
@@ -99,6 +100,14 @@ const userReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case LOGOUT_USER:
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        error: null,
       };
     default:
       return state;

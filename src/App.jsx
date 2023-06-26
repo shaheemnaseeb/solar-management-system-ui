@@ -7,21 +7,51 @@ import Project from "./components/Project/Project";
 import ProjectDetail from "./components/Project/ProjectDetail";
 import ProductAdd from "./components/Product/ProductAdd";
 import ProductDetails from "./components/Product/ProductDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { Fragment } from "react";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/signup" element={<AddUser />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/projects" element={<Project />}></Route>
-          <Route path="/products" element={<ProductAdd />} />
-          <Route path="/project/:projectId" element={<ProjectDetail />} />
-          <Route path="/project/:projectId/product/:productId" element={<ProductDetails />} />
-        </Routes>
+        <Fragment>
+          <Navbar />
+          <Routes>
+            <Route exact path="/signup" element={<AddUser />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/" element={<ProtectedRoute />}>
+              <Route exact path="/" element={<Home />} />
+            </Route>
+            <Route exact path="/projects" element={<ProtectedRoute />}>
+              <Route exact path="/projects" element={<Project />} />
+            </Route>
+            <Route exact path="/products" element={<ProtectedRoute />}>
+              <Route exact path="/products" element={<ProductAdd />} />
+            </Route>
+            <Route
+              exact
+              path="/project/:projectId"
+              element={<ProtectedRoute />}
+            >
+              <Route
+                exact
+                path="/project/:projectId"
+                element={<ProjectDetail />}
+              />
+            </Route>
+            <Route
+              exact
+              path="/project/:projectId/product/:productId"
+              element={<ProtectedRoute />}
+            >
+              <Route
+                exact
+                path="/project/:projectId/product/:productId"
+                element={<ProductDetails />}
+              />
+            </Route>
+          </Routes>
+        </Fragment>
       </BrowserRouter>
     </>
   );

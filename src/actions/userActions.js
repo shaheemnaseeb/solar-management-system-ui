@@ -12,6 +12,7 @@ import {
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAILURE,
+  LOGOUT_USER,
 } from "../types/userActionType";
 
 export const createUser = (user) => {
@@ -82,7 +83,7 @@ export const loginUser = (username, password) => {
     dispatch({ type: LOGIN_USER });
     const user = {
       username,
-      password
+      password,
     };
     try {
       const response = await axios.post(`/api/v1/user/login`, {
@@ -99,5 +100,11 @@ export const loginUser = (username, password) => {
         payload: error.response.data.error,
       });
     }
+  };
+};
+
+export const logoutUser = () => {
+  return async (dispatch) => {
+    dispatch({ type: LOGOUT_USER });
   };
 };

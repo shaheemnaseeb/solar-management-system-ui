@@ -14,6 +14,7 @@ import {
   DELETE_PROJECT_PRODUCT,
   DELETE_PROJECT_PRODUCT_SUCCESS,
   DELETE_PROJECT_PRODUCT_FAILURE,
+  RESET_PROJECT_PRODUCT,
 } from "../types/productActionType";
 
 const initialState = {
@@ -117,6 +118,14 @@ const productReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case RESET_PROJECT_PRODUCT:
+      return {
+        ...state,
+        products: [],
+        product: null,
+        loading: false,
+        error: null,
       };
     default:
       return state;

@@ -1,19 +1,22 @@
 import axios from "axios";
 import {
-    CREATE_REPORT,
-    CREATE_REPORT_FAILURE,
-    CREATE_REPORT_SUCCESS,
-    GET_REPORT,
-    GET_REPORT_FAILURE,
-    GET_REPORT_SUCCESS,
+  CREATE_REPORT,
+  CREATE_REPORT_FAILURE,
+  CREATE_REPORT_SUCCESS,
+  GET_REPORT,
+  GET_REPORT_FAILURE,
+  GET_REPORT_SUCCESS,
+  RESET_REPORT,
 } from "../types/reportActionType";
 
-export const createReport = (userid,productid) => {
+export const createReport = (userid, productid) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_REPORT });
 
     try {
-      const response = await axios.post(`/report/${userid}/create/${productid}`);
+      const response = await axios.post(
+        `/report/${userid}/create/${productid}`
+      );
 
       dispatch({
         type: CREATE_REPORT_SUCCESS,
@@ -45,5 +48,11 @@ export const getReport = (productid) => {
         payload: error.response.data.error,
       });
     }
+  };
+};
+
+export const resetReportData = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_REPORT });
   };
 };

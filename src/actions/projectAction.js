@@ -12,6 +12,7 @@ import {
   DELETE_PROJECT,
   DELETE_PROJECT_SUCCESS,
   DELETE_PROJECT_FAILURE,
+  RESET_PROJECT,
 } from "../types/projectActionType";
 
 export const createProject = (project) => {
@@ -76,7 +77,7 @@ export const updateProject = (projectid, project) => {
       });
     }
   };
-}
+};
 
 export const deleteProject = (projectid) => {
   return async (dispatch) => {
@@ -96,4 +97,10 @@ export const deleteProject = (projectid) => {
       });
     }
   };
-}
+};
+
+export const resetProjectData = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_PROJECT });
+  };
+};

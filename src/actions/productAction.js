@@ -15,6 +15,7 @@ import {
   DELETE_PROJECT_PRODUCT,
   DELETE_PROJECT_PRODUCT_SUCCESS,
   DELETE_PROJECT_PRODUCT_FAILURE,
+  RESET_PROJECT_PRODUCT,
 } from "../types/productActionType";
 
 export const getProducts = () => {
@@ -119,5 +120,11 @@ export const deleteProduct = (productid) => {
         payload: error.response.data.error,
       });
     }
+  };
+};
+
+export const resetProductData = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_PROJECT_PRODUCT });
   };
 };
