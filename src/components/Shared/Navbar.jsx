@@ -8,10 +8,11 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { resetProductData } from "../actions/productAction";
-import { resetProjectData } from "../actions/projectAction";
-import { resetReportData } from "../actions/reportAction";
-import { logoutUser } from "../actions/userActions";
+import { resetProductData } from "../../actions/productAction";
+import { resetProjectData } from "../../actions/projectAction";
+import { resetReportData } from "../../actions/reportAction";
+import { logoutUser } from "../../actions/userActions";
+import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -46,6 +47,7 @@ const Navbar = () => {
         </Typography>
         {isAuthenticated ? (
           <>
+            <ToastContainer />
             <Button
               component={Link}
               to="/"

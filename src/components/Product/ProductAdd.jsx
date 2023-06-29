@@ -20,8 +20,9 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getProjects } from "../../actions/projectAction";
-import { addProduct, getProducts } from "../../actions/productAction";
+import { getProjects, resetProjectError } from "../../actions/projectAction";
+import { addProduct, getProducts, resetProductError } from "../../actions/productAction";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -55,6 +56,7 @@ const ProductAdd = () => {
   const user = useSelector((state) => state.user.user);
   const projects = useSelector((state) => state.project.projects);
   const products = useSelector((state) => state.product.products);
+  const error = useSelector((state) => state.product.error);
   const [product, setProduct] = useState({
     area: "",
     latitude: 0,
@@ -68,31 +70,35 @@ const ProductAdd = () => {
   });
 
   const navigate = useNavigate();
-
+  
+  const fetchProjects = async () => {
+    await dispatch(getProjects(user.id));
+  };
+  
+  const fetchProducts = async () => {
+    await dispatch(getProducts());
+  };
+  
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        await dispatch(getProjects(user.id));
-      } catch (error) {
-        console.log("Error fetching projects:", error);
-      }
-    };
-    const fetchProducts = async () => {
-      try {
-        await dispatch(getProducts());
-      } catch (error) {
-        console.log("Error fetching products:", error);
-      }
-    };
+
     fetchProjects();
     fetchProducts();
     // eslint-disable-next-line
   }, [user]);
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(resetProductError());
+      dispatch(resetProjectError());
+    }
+  }, [error]);
+
   const handleAddProduct = async (e) => {
     product.userId = user.id;
     e.preventDefault();
     await dispatch(addProduct(product));
+    toast.success("Product added successfully!");
     navigate(`/project/${product.projectId}`);
   };
 

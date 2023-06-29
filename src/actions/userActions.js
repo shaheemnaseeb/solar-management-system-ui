@@ -16,6 +16,7 @@ import {
   GET_USER,
   GET_USER_SUCCESS,
   GET_USER_FAILURE,
+  RESET_USER_ERROR,
 } from "../types/userActionType";
 
 export const createUser = (user) => {
@@ -34,7 +35,7 @@ export const createUser = (user) => {
     } catch (error) {
       dispatch({
         type: CREATE_USER_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -56,7 +57,7 @@ export const updateUser = (user) => {
     } catch (error) {
       dispatch({
         type: UPDATE_USER_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -75,7 +76,7 @@ export const deleteUser = (id) => {
     } catch (error) {
       dispatch({
         type: DELETE_USER_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -100,7 +101,7 @@ export const loginUser = (username, password) => {
     } catch (error) {
       dispatch({
         type: LOGIN_USER_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -126,8 +127,14 @@ export const getUser = (username) => {
     } catch (error) {
       dispatch({
         type: GET_USER_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
-}
+};
+
+export const resetUserError = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_USER_ERROR });
+  };
+};

@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { Button, TextField, Typography, makeStyles } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../actions/userActions';
+import React, { useState } from "react";
+import { Button, TextField, Typography, makeStyles } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser, resetUserError } from "../../actions/userActions";
+import { useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   form: {
-    width: '300px',
+    width: "300px",
     padding: theme.spacing(2),
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: theme.spacing(1),
   },
   title: {
@@ -31,14 +34,28 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const error = useSelector((state) => state.user.error);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(loginUser(username, password));
-    navigate('/');
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setPasswordError("");
+      navigate("/");
+    } else if (error) {
+      toast.error(error);
+      dispatch(resetUserError());
+    } else if (isAuthenticated !== null && isAuthenticated === false) {
+      setPasswordError("Incorrect username or password");
+    }
+  }, [isAuthenticated, error]);
 
   return (
     <div className={classes.root}>
@@ -52,6 +69,7 @@ const Login = () => {
           fullWidth
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          error={passwordError ? true : false}
           margin="normal"
         />
         <TextField
@@ -62,6 +80,8 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           margin="normal"
+          error={passwordError ? true : false}
+          helperText={passwordError}
         />
         <Button
           type="submit"

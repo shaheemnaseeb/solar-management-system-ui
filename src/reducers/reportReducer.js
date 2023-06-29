@@ -6,6 +6,7 @@ import {
   GET_REPORT_FAILURE,
   GET_REPORT_SUCCESS,
   RESET_REPORT,
+  RESET_REPORT_ERROR,
 } from "../types/reportActionType";
 
 const initialState = {
@@ -59,6 +60,11 @@ const reportReducer = (state = initialState, action) => {
         ...state,
         report: null,
         loading: false,
+        error: null,
+      };
+    case RESET_REPORT_ERROR:
+      return {
+        ...state,
         error: null,
       };
     default:

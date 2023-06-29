@@ -1,14 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AddUser from "./components/User/AddUser";
-import Navbar from "./components/Navbar";
+import AddUser from "./components/User/SignUp";
+import Navbar from "./components/Shared/Navbar";
 import Login from "./components/User/Login";
 import Home from "./components/User/Home";
 import Project from "./components/Project/Project";
-import ProjectDetail from "./components/Project/ProjectDetail";
+import ProjectDetail from "./components/Project/ProjectDetails";
 import ProductAdd from "./components/Product/ProductAdd";
 import ProductDetails from "./components/Product/ProductDetails";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/Shared/ProtectedRoute";
 import { Fragment } from "react";
+import NotFound from "./components/Shared/NotFound";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                 element={<ProductDetails />}
               />
             </Route>
+            <Route exact path="*" element={<NotFound />} />
           </Routes>
         </Fragment>
       </BrowserRouter>

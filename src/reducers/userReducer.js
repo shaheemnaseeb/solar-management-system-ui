@@ -15,11 +15,12 @@ import {
   GET_USER,
   GET_USER_SUCCESS,
   GET_USER_FAILURE,
+  RESET_USER_ERROR,
 } from "../types/userActionType";
 
 const initialState = {
   user: null,
-  isAuthenticated: false,
+  isAuthenticated: null,
   loading: false,
   error: null,
 };
@@ -74,8 +75,9 @@ const userReducer = (state = initialState, action) => {
     case DELETE_USER_SUCCESS:
       return {
         ...state,
+        user: null,
+        isAuthenticated: null,
         loading: false,
-        isAuthenticated: true,
         error: null,
       };
     case DELETE_USER_FAILURE:
@@ -108,7 +110,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: null,
-        isAuthenticated: false,
+        isAuthenticated: null,
         loading: false,
         error: null,
       };
@@ -131,6 +133,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case RESET_USER_ERROR:
+      return {
+        ...state,
+        error: null,
       };
     default:
       return state;

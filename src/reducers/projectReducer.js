@@ -12,6 +12,7 @@ import {
   DELETE_PROJECT_SUCCESS,
   DELETE_PROJECT_FAILURE,
   RESET_PROJECT,
+  RESET_PROJECT_ERROR,
 } from "../types/projectActionType";
 
 const initialState = {
@@ -102,6 +103,11 @@ const projectReducer = (state = initialState, action) => {
         projects: [],
         project: null,
         loading: false,
+        error: null,
+      };
+    case RESET_PROJECT_ERROR:
+      return {
+        ...state,
         error: null,
       };
     default:

@@ -7,6 +7,7 @@ import {
   GET_REPORT_FAILURE,
   GET_REPORT_SUCCESS,
   RESET_REPORT,
+  RESET_REPORT_ERROR,
 } from "../types/reportActionType";
 
 export const createReport = (userid, productid) => {
@@ -25,7 +26,7 @@ export const createReport = (userid, productid) => {
     } catch (error) {
       dispatch({
         type: CREATE_REPORT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -45,7 +46,7 @@ export const getReport = (productid) => {
     } catch (error) {
       dispatch({
         type: GET_REPORT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -54,5 +55,11 @@ export const getReport = (productid) => {
 export const resetReportData = () => {
   return async (dispatch) => {
     dispatch({ type: RESET_REPORT });
+  };
+};
+
+export const resetReportError = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_REPORT_ERROR });
   };
 };

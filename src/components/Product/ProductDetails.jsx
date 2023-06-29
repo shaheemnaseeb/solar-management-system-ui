@@ -11,6 +11,7 @@ import {
 import {
   deleteProduct,
   getProductsbyProjectId,
+  resetProductError,
   updateProduct,
 } from "../../actions/productAction";
 import Spinner from "../Shared/Spinner";
@@ -20,8 +21,13 @@ import {
   Marker,
   useMapEvents,
 } from "react-leaflet";
-import { createReport, getReport } from "../../actions/reportAction";
+import {
+  createReport,
+  getReport,
+  resetReportError,
+} from "../../actions/reportAction";
 import ReportGraph from "../Report/ReportGraph";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +53,8 @@ const ProductDetails = () => {
   );
   const userid = useSelector((state) => state.user.user.id);
   const report = useSelector((state) => state.report.report);
+  const loading = useSelector((state) => state.report.loading);
+  const error = useSelector((state) => state.report.error);
   const [formData, setFormData] = useState({
     area: "",
     latitude: 0,
@@ -58,6 +66,8 @@ const ProductDetails = () => {
     name: "",
     power: "",
   });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const classes = useStyles();
 
   const findProductById = (productId) => {
@@ -103,6 +113,18 @@ const ProductDetails = () => {
     }
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(resetProductError());
+      dispatch(resetReportError());
+      dispatch(resetProductError());
+    } else if (error === null && formSubmitted) {
+      toast.success(toastMessage);
+      setFormSubmitted(false);
+    }
+  }, [error, formSubmitted]);
+
   function LocationMarker() {
     useMapEvents({
       click: handleMapClick,
@@ -122,6 +144,8 @@ const ProductDetails = () => {
   const handleUpdateProduct = async () => {
     await dispatch(updateProduct(productId, formData));
     getProjectProducts(projectId);
+    setFormSubmitted(true);
+    setToastMessage("Product updated successfully");
     navigate(`/project/${projectId}/product/${productId}`);
   };
 
@@ -129,6 +153,7 @@ const ProductDetails = () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       dispatch(deleteProduct(productId));
       getProjectProducts(projectId);
+      toast.success("Product deleted successfully");
       navigate(`/project/${projectId}`);
     }
   };
@@ -136,6 +161,8 @@ const ProductDetails = () => {
   const handleGenerateReport = async () => {
     await dispatch(createReport(userid, Number(productId)));
     getProjectProducts(projectId);
+    setFormSubmitted(true);
+    setToastMessage("Report generated successfully");
     navigate(`/project/${projectId}/product/${productId}`);
   };
 

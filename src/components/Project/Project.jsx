@@ -11,8 +11,14 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createProject, getProjects } from "../../actions/projectAction";
+import {
+  createProject,
+  getProjects,
+  resetProjectError,
+} from "../../actions/projectAction";
 import Spinner from "../Shared/Spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -39,10 +45,13 @@ const useStyles = makeStyles((theme) => ({
 const Project = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
   const user = useSelector((state) => state.user.user);
   const loading = useSelector((state) => state.loading);
+  const error = useSelector((state) => state.project.error);
 
   const navigate = useNavigate();
   const handleOpen = () => {
@@ -58,8 +67,9 @@ const Project = () => {
     project.createdAt = new Date();
     await dispatch(createProject(project));
     await dispatch(getProjects(user.id));
+    setToastMessage("Project Created");
+    setFormSubmitted(true);
     handleClose();
-    navigate.go(0);
   };
 
   const handleChange = (e) => {
@@ -72,7 +82,7 @@ const Project = () => {
 
   const handleCardClick = (projectId) => {
     navigate(`/project/${projectId}`);
-  }
+  };
 
   const [project, setProject] = useState({
     name: "",
@@ -82,18 +92,24 @@ const Project = () => {
     userId: user.id,
   });
 
+  const fetchProjects = async () => {
+    await dispatch(getProjects(user.id));
+  };
+
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        await dispatch(getProjects(user.id));
-      } catch (error) {
-        console.log("Error fetching projects:", error);
-      }
-    };
-    
     fetchProjects();
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [user]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(resetProjectError());
+    } else if (error === null && formSubmitted) {
+      toast.success(toastMessage);
+      setFormSubmitted(false);
+    }
+  }, [error, formSubmitted]);
 
   if (loading) {
     return <Spinner />;
@@ -107,7 +123,10 @@ const Project = () => {
           <Grid container spacing={2}>
             {projects.map((project) => (
               <Grid item xs={12} sm={6} md={4} key={project.id}>
-                <Card className={classes.card} onClick={() => handleCardClick(project.id)}>
+                <Card
+                  className={classes.card}
+                  onClick={() => handleCardClick(project.id)}
+                >
                   <CardContent className={classes.cardContent}>
                     <Typography variant="h6">{project.name}</Typography>
                     <Typography variant="body2" color="textSecondary">

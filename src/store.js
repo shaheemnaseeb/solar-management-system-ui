@@ -16,13 +16,16 @@ const reducer = combineReducers({
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
 
-const store = configureStore({ reducer: persistedReducer }, applyMiddleware(thunk));
+const store = configureStore(
+  { reducer: persistedReducer },
+  applyMiddleware(thunk)
+);
 
 export const persistor = persistStore(store);
 

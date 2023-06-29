@@ -16,9 +16,17 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteProject, updateProject } from "../../actions/projectAction";
+import {
+  deleteProject,
+  resetProjectError,
+  updateProject,
+} from "../../actions/projectAction";
 import { getProductsbyProjectId } from "../../actions/productAction";
 import { MapContainer as Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "leaflet/dist/leaflet.css";
+import { resetReportError } from "../../actions/reportAction";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -43,10 +51,13 @@ const ProjectDetail = () => {
   const [project, setProject] = useState({});
   const projects = useSelector((state) => state.project.projects);
   const products = useSelector((state) => state.product.project_products);
+  const error = useSelector((state) => state.project.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [activeFilter, setActiveFilter] = useState(true);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const filteredProducts = products.filter((product) =>
     product.active === activeFilter ? product : null
@@ -63,6 +74,16 @@ const ProjectDetail = () => {
   const getProjectProducts = async (projectId) => {
     await dispatch(getProductsbyProjectId(projectId));
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(resetProjectError());
+    } else if (error === null && formSubmitted) {
+      toast.success(toastMessage);
+      setFormSubmitted(false);
+    }
+  }, [error, formSubmitted]);
 
   useEffect(() => {
     setProject(findProjectById(projectId));
@@ -88,6 +109,7 @@ const ProjectDetail = () => {
 
   const handleDeleteProject = async () => {
     await dispatch(deleteProject(projectId));
+    toast.success("Project deleted successfully");
     navigate("/projects");
   };
 
@@ -106,7 +128,8 @@ const ProjectDetail = () => {
   const handleUpdateProject = async () => {
     setEditMode(false);
     await dispatch(updateProject(projectId, project));
-    navigate(`/project/${projectId}`);
+    setToastMessage("Project updated successfully");
+    setFormSubmitted(true);
   };
 
   const Products = (product) => (

@@ -16,6 +16,7 @@ import {
   DELETE_PROJECT_PRODUCT_SUCCESS,
   DELETE_PROJECT_PRODUCT_FAILURE,
   RESET_PROJECT_PRODUCT,
+  RESET_PROJECT_PRODUCT_ERROR,
 } from "../types/productActionType";
 
 export const getProducts = () => {
@@ -32,7 +33,7 @@ export const getProducts = () => {
     } catch (error) {
       dispatch({
         type: GET_PRODUCT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -53,7 +54,7 @@ export const addProduct = (product) => {
     } catch (error) {
       dispatch({
         type: ADD_PRODUCT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -73,7 +74,7 @@ export const getProductsbyProjectId = (projectid) => {
     } catch (error) {
       dispatch({
         type: GET_PROJECT_PRODUCT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -95,7 +96,7 @@ export const updateProduct = (productId, product) => {
     } catch (error) {
       dispatch({
         type: UPDATE_PROJECT_PRODUCT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -117,7 +118,7 @@ export const deleteProduct = (productid) => {
     } catch (error) {
       dispatch({
         type: DELETE_PROJECT_PRODUCT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -128,3 +129,9 @@ export const resetProductData = () => {
     dispatch({ type: RESET_PROJECT_PRODUCT });
   };
 };
+
+export const resetProductError = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_PROJECT_PRODUCT_ERROR });
+  };
+}

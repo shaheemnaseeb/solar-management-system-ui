@@ -13,6 +13,7 @@ import {
   DELETE_PROJECT_SUCCESS,
   DELETE_PROJECT_FAILURE,
   RESET_PROJECT,
+  RESET_PROJECT_ERROR,
 } from "../types/projectActionType";
 
 export const createProject = (project) => {
@@ -31,7 +32,7 @@ export const createProject = (project) => {
     } catch (error) {
       dispatch({
         type: CREATE_PROJECT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -51,7 +52,7 @@ export const getProjects = (userid) => {
     } catch (error) {
       dispatch({
         type: GET_PROJECT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -73,7 +74,7 @@ export const updateProject = (projectid, project) => {
     } catch (error) {
       dispatch({
         type: UPDATE_PROJECT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -93,7 +94,7 @@ export const deleteProject = (projectid) => {
     } catch (error) {
       dispatch({
         type: DELETE_PROJECT_FAILURE,
-        payload: error.response.data.error,
+        payload: error.message,
       });
     }
   };
@@ -102,5 +103,11 @@ export const deleteProject = (projectid) => {
 export const resetProjectData = () => {
   return async (dispatch) => {
     dispatch({ type: RESET_PROJECT });
+  };
+};
+
+export const resetProjectError = () => {
+  return async (dispatch) => {
+    dispatch({ type: RESET_PROJECT_ERROR });
   };
 };
