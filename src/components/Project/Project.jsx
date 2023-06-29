@@ -50,8 +50,8 @@ const Project = () => {
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
   const user = useSelector((state) => state.user.user);
-  const loading = useSelector((state) => state.loading);
   const error = useSelector((state) => state.project.error);
+  const loading = useSelector((state) => state.project.loading);
 
   const navigate = useNavigate();
   const handleOpen = () => {

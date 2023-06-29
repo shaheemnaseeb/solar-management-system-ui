@@ -27,6 +27,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "leaflet/dist/leaflet.css";
 import { resetReportError } from "../../actions/reportAction";
+import Spinner from "../Shared/Spinner";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -51,6 +52,7 @@ const ProjectDetail = () => {
   const [project, setProject] = useState({});
   const projects = useSelector((state) => state.project.projects);
   const products = useSelector((state) => state.product.project_products);
+  const loading = useSelector((state) => state.project.loading);
   const error = useSelector((state) => state.project.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -131,6 +133,10 @@ const ProjectDetail = () => {
     setToastMessage("Project updated successfully");
     setFormSubmitted(true);
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   const Products = (product) => (
     <Grid item xs={12} sm={6} md={3} key={product.id}>

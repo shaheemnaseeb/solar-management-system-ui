@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { getProjects, resetProjectError } from "../../actions/projectAction";
 import { addProduct, getProducts, resetProductError } from "../../actions/productAction";
 import { toast } from "react-toastify";
+import Spinner from "../Shared/Spinner";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -56,6 +57,7 @@ const ProductAdd = () => {
   const user = useSelector((state) => state.user.user);
   const projects = useSelector((state) => state.project.projects);
   const products = useSelector((state) => state.product.products);
+  const loading = useSelector((state) => state.product.loading);
   const error = useSelector((state) => state.product.error);
   const [product, setProduct] = useState({
     area: "",
@@ -125,6 +127,10 @@ const ProductAdd = () => {
     });
 
     return <Marker position={[product.latitude, product.longitude]} />;
+  }
+
+  if (loading) {
+    return <Spinner />;
   }
 
   return (

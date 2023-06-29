@@ -166,6 +166,8 @@ const ProductDetails = () => {
     navigate(`/project/${projectId}/product/${productId}`);
   };
 
+  if (loading) return <Spinner />;
+
   return (
     <div className={classes.root}>
       <Typography variant="h4" gutterBottom>

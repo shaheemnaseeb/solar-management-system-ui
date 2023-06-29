@@ -17,6 +17,7 @@ import {
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "../Shared/Spinner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +53,7 @@ const Home = () => {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.user.user);
   const error = useSelector((state) => state.user.error);
+  const loading = useSelector((state) => state.user.loading);
   const [toastMessage, setToastMessage] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [passwordError, setPasswordError] = useState("");
@@ -117,6 +119,10 @@ const Home = () => {
       [e.target.name]: value,
     });
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className={classes.root}>

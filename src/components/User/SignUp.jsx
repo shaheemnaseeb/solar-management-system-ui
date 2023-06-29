@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "../Shared/Spinner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,7 @@ const AddUser = () => {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const loading = useSelector((state) => state.user.loading);
   const error = useSelector((state) => state.user.error);
 
   const navigate = useNavigate();
@@ -84,6 +86,10 @@ const AddUser = () => {
     email: "",
     password: "",
   });
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className={classes.root}>
