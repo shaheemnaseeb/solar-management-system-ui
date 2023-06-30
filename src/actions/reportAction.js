@@ -16,7 +16,7 @@ export const createReport = (userid, productid) => {
 
     try {
       const response = await axios.post(
-        `/report/${userid}/create/${productid}`
+        `/api/v1/report/${userid}/create/${productid}`
       );
 
       dispatch({
@@ -37,7 +37,7 @@ export const getReport = (productid) => {
     dispatch({ type: GET_REPORT });
 
     try {
-      const response = await axios.get(`/report/get/${productid}`);
+      const response = await axios.get(`/api/v1/report/get/${productid}`);
 
       dispatch({
         type: GET_REPORT_SUCCESS,

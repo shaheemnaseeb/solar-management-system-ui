@@ -92,6 +92,7 @@ const ProductDetails = () => {
       tilt: product?.tilt,
       active: product?.active,
     });
+    // eslint-disable-next-line
   }, [porject_products, userid, productId]);
 
   const handleInputChange = (e) => {
@@ -123,6 +124,7 @@ const ProductDetails = () => {
       toast.success(toastMessage);
       setFormSubmitted(false);
     }
+    // eslint-disable-next-line
   }, [error, formSubmitted]);
 
   function LocationMarker() {

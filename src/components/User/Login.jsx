@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser, resetUserError } from "../../actions/userActions";
 import { useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Spinner from "../Shared/Spinner";
 
@@ -57,6 +57,7 @@ const Login = () => {
     } else if (isAuthenticated !== null && isAuthenticated === false) {
       setPasswordError("Incorrect username or password");
     }
+    // eslint-disable-next-line
   }, [isAuthenticated, error]);
 
   if (loading) {

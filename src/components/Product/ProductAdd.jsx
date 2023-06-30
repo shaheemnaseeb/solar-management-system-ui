@@ -94,6 +94,7 @@ const ProductAdd = () => {
       dispatch(resetProductError());
       dispatch(resetProjectError());
     }
+    // eslint-disable-next-line
   }, [error]);
 
   const handleAddProduct = async (e) => {

@@ -23,10 +23,9 @@ import {
 } from "../../actions/projectAction";
 import { getProductsbyProjectId } from "../../actions/productAction";
 import { MapContainer as Map, TileLayer, Marker, Popup } from "react-leaflet";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "leaflet/dist/leaflet.css";
-import { resetReportError } from "../../actions/reportAction";
 import Spinner from "../Shared/Spinner";
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +60,7 @@ const ProjectDetail = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  const filteredProducts = products.filter((product) =>
+  const filteredProducts = products?.filter((product) =>
     product.active === activeFilter ? product : null
   );
 
@@ -85,11 +84,13 @@ const ProjectDetail = () => {
       toast.success(toastMessage);
       setFormSubmitted(false);
     }
+    // eslint-disable-next-line
   }, [error, formSubmitted]);
 
   useEffect(() => {
     setProject(findProjectById(projectId));
     getProjectProducts(projectId);
+    // eslint-disable-next-line
   }, [projects]);
 
   const renderMap = (product) => (
@@ -261,9 +262,9 @@ const ProjectDetail = () => {
             <MenuItem value={false}>Inactive</MenuItem>
           </Select>
         </FormControl>
-        {filteredProducts.length > 0 ? (
+        {filteredProducts?.length > 0 ? (
           <Grid container spacing={2}>
-            {filteredProducts.map((product) => (
+            {filteredProducts?.map((product) => (
               <Products key={product.id} {...product} />
             ))}
           </Grid>

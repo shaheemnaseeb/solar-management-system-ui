@@ -17,7 +17,7 @@ import {
   resetProjectError,
 } from "../../actions/projectAction";
 import Spinner from "../Shared/Spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -109,6 +109,7 @@ const Project = () => {
       toast.success(toastMessage);
       setFormSubmitted(false);
     }
+    // eslint-disable-next-line
   }, [error, formSubmitted]);
 
   if (loading) {
