@@ -40,6 +40,13 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     paddingBottom: theme.spacing(1),
   },
+  root: {
+    marginTop: theme.spacing(2),
+  },
+  datePicker: {
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 const Project = () => {
@@ -96,6 +103,17 @@ const Project = () => {
     await dispatch(getProjects(user.id));
   };
 
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
+  const filteredData = projects?.filter((item) => {
+    const itemDate = item.createdAt.split("T")[0];
+    return itemDate === selectedDate;
+  });
+
   useEffect(() => {
     fetchProjects();
     // eslint-disable-next-line
@@ -119,10 +137,27 @@ const Project = () => {
   return (
     <div>
       <h1>Project Overview</h1>
-      {projects ? (
+      <div className={classes.root}>
+        <Typography variant="h6" gutterBottom>
+          Filter by Date
+        </Typography>
+        <TextField
+          id="datePicker"
+          label="Select a date"
+          type="date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          variant="outlined"
+          className={classes.datePicker}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      </div>
+      {filteredData ? (
         <div>
           <Grid container spacing={2}>
-            {projects.map((project) => (
+            {filteredData.map((project) => (
               <Grid item xs={12} sm={6} md={4} key={project.id}>
                 <Card
                   className={classes.card}
